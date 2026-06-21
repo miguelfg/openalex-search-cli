@@ -37,7 +37,7 @@ def get(ctx, id):
     """Get a publisher by ID."""
     client = APIClient(ctx.obj['config'])
     try:
-        result = client.get('/publishers/{id}')
+        result = client.get(f'/publishers/{id}')
         import json
         click.echo(json.dumps(result, indent=2))
     except Exception as e:

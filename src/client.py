@@ -27,7 +27,13 @@ class APIClient:
         if self.api_key:
             request_params['api_key'] = self.api_key
         response = self.session.request(method=method, url=url, params=request_params or None, json=data, timeout=30)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            # Avoid leaking query-string credentials in exception messages.
+            status = response.status_code
+            reason = response.reason
+            raise requests.HTTPError(f"{status} {reason} for {method} {url}") from exc
         if not response.text:
             return {}
         return response.json()
