@@ -2,6 +2,12 @@
 
 Small Click-based CLI for the OpenAlex API.
 
+## Links
+
+- OpenAlex site: https://openalex.org
+- OpenAlex documentation: https://developers.openalex.org
+- Skillset repo: https://github.com/miguelfg/api-to-cli-skillset
+
 ## What It Does
 
 - Lists core OpenAlex resources.
