@@ -27,6 +27,9 @@ pip-wheel-metadata/
 .coverage.*
 htmlcov/
 
+# Local git worktrees
+.worktrees/
+
 # IDEs and editors
 .vscode/
 .idea/
