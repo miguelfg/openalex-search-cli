@@ -37,7 +37,7 @@ def get(ctx, id):
     """Get a text_topic by ID."""
     client = APIClient(ctx.obj['config'])
     try:
-        result = client.get('/text_topics/{id}')
+        result = client.get(f'/text_topics/{id}')
         import json
         click.echo(json.dumps(result, indent=2))
     except Exception as e:

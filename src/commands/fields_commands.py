@@ -37,7 +37,7 @@ def get(ctx, id):
     """Get a field by ID."""
     client = APIClient(ctx.obj['config'])
     try:
-        result = client.get('/fields/{id}')
+        result = client.get(f'/fields/{id}')
         import json
         click.echo(json.dumps(result, indent=2))
     except Exception as e:

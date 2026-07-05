@@ -37,7 +37,7 @@ def get(ctx, id):
     """Get a award by ID."""
     client = APIClient(ctx.obj['config'])
     try:
-        result = client.get('/awards/{id}')
+        result = client.get(f'/awards/{id}')
         import json
         click.echo(json.dumps(result, indent=2))
     except Exception as e:
