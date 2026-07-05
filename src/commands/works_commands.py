@@ -42,18 +42,3 @@ def get(ctx, id):
         click.echo(json.dumps(result, indent=2))
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
-
-
-@works_group.command()
-@click.option('--data', type=str, help='JSON data for the work')
-@click.pass_context
-def create(ctx, data):
-    """Create a new work."""
-    client = APIClient(ctx.obj['config'])
-    try:
-        import json
-        payload = json.loads(data) if data else {}
-        result = client.post('/works', payload)
-        click.echo(json.dumps(result, indent=2))
-    except Exception as e:
-        click.echo(f"Error: {e}", err=True)

@@ -21,7 +21,24 @@ class APIClient:
         # OpenAlex authenticates via query string, not headers.
         return
 
+    @staticmethod
+    def _validate_endpoint(endpoint: str) -> None:
+        # Root-cause guard: endpoints are built by interpolating untrusted input
+        # (CLI ids, batch-file paths) into a path string. Keep requests on-host
+        # and on-path so a crafted value can't retarget the request (and leak the
+        # api_key) or escape into another resource.
+        if (
+            not endpoint.startswith("/")
+            or endpoint.startswith("//")
+            or ".." in endpoint
+            or "%2f" in endpoint.lower()
+            or any(c in endpoint for c in "?#")
+            or any(c.isspace() for c in endpoint)
+        ):
+            raise ValueError(f"Unsafe endpoint: {endpoint!r}")
+
     def _request(self, method: str, endpoint: str, params: Optional[Dict] = None, data: Optional[Dict] = None) -> Dict[str, Any]:
+        self._validate_endpoint(endpoint)
         url = f"{self.base_url}{endpoint}"
         request_params = dict(params or {})
         if self.api_key:
@@ -40,13 +57,3 @@ class APIClient:
 
     def get(self, endpoint: str, params: Optional[Dict] = None) -> Dict[str, Any]:
         return self._request('GET', endpoint, params=params)
-
-    def post(self, endpoint: str, data: Dict) -> Dict[str, Any]:
-        return self._request('POST', endpoint, data=data)
-
-    def put(self, endpoint: str, data: Dict) -> Dict[str, Any]:
-        return self._request('PUT', endpoint, data=data)
-
-    def delete(self, endpoint: str) -> Dict[str, Any]:
-        result = self._request('DELETE', endpoint)
-        return result if result else {"status": "deleted"}

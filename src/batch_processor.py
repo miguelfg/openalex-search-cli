@@ -75,19 +75,12 @@ class BatchProcessor:
 
     def _execute_request(self, request_data: Dict) -> Dict:
         """Execute a single request."""
+        # OpenAlex is a read-only API; batch input is untrusted, so only GET is
+        # allowed. The client validates the endpoint (on-host, on-path).
         method = request_data.get('method', 'GET').upper()
-        endpoint = request_data.get('endpoint', '/')
-
-        if method == 'GET':
-            return self.client.get(endpoint)
-        elif method == 'POST':
-            return self.client.post(endpoint, request_data.get('data', {}))
-        elif method == 'PUT':
-            return self.client.put(endpoint, request_data.get('data', {}))
-        elif method == 'DELETE':
-            return self.client.delete(endpoint)
-        else:
-            raise ValueError(f"Unsupported HTTP method: {method}")
+        if method != 'GET':
+            raise ValueError(f"Only GET is allowed in batch mode, got {method}")
+        return self.client.get(request_data.get('endpoint', '/'))
 
     def _save_results(self, results: List[Dict]):
         """Save results in specified format."""

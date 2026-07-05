@@ -23,3 +23,14 @@ def test_batch_help():
 
 def test_selected_http_library_dependency_is_available():
     assert importlib.util.find_spec("requests") is not None
+
+
+def test_endpoint_guard_rejects_unsafe_paths():
+    import pytest
+    from src.client import APIClient
+
+    APIClient._validate_endpoint("/works/W123")  # safe path passes
+    for bad in ["//evil.com", "/works/../authors", "https://evil.com",
+                "/works/W1?x=y", "/works/%2f..", "/works/ id"]:
+        with pytest.raises(ValueError):
+            APIClient._validate_endpoint(bad)

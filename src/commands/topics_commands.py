@@ -42,18 +42,3 @@ def get(ctx, id):
         click.echo(json.dumps(result, indent=2))
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
-
-
-@topics_group.command()
-@click.option('--data', type=str, help='JSON data for the topic')
-@click.pass_context
-def create(ctx, data):
-    """Create a new topic."""
-    client = APIClient(ctx.obj['config'])
-    try:
-        import json
-        payload = json.loads(data) if data else {}
-        result = client.post('/topics', payload)
-        click.echo(json.dumps(result, indent=2))
-    except Exception as e:
-        click.echo(f"Error: {e}", err=True)
