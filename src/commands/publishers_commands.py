@@ -3,6 +3,7 @@ CLI commands for publishers resource.
 """
 
 import click
+
 from src.client import APIClient
 
 
@@ -14,15 +15,16 @@ def publishers_group(ctx):
 
 
 @publishers_group.command()
-@click.option('--format', type=click.Choice(['json', 'csv', 'xlsx']), default='json')
+@click.option("--format", type=click.Choice(["json", "csv", "xlsx"]), default="json")
 @click.pass_context
 def list(ctx, format):
     """List all publishers."""
-    client = APIClient(ctx.obj['config'])
+    client = APIClient(ctx.obj["config"])
     try:
-        results = client.get('/publishers')
-        if format == 'json':
+        results = client.get("/publishers")
+        if format == "json":
             import json
+
             click.echo(json.dumps(results, indent=2))
         else:
             click.echo(f"Format {format} not yet implemented")
@@ -31,14 +33,15 @@ def list(ctx, format):
 
 
 @publishers_group.command()
-@click.argument('id')
+@click.argument("id")
 @click.pass_context
 def get(ctx, id):
     """Get a publisher by ID."""
-    client = APIClient(ctx.obj['config'])
+    client = APIClient(ctx.obj["config"])
     try:
-        result = client.get(f'/publishers/{id}')
+        result = client.get(f"/publishers/{id}")
         import json
+
         click.echo(json.dumps(result, indent=2))
     except Exception as e:
         click.echo(f"Error: {e}", err=True)

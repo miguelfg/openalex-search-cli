@@ -6,7 +6,9 @@ import logging
 import sys
 
 
-def setup_logger(name: str = "openalex-search-cli", verbose: bool = False) -> logging.Logger:
+def setup_logger(
+    name: str = "openalex-search-cli", verbose: bool = False
+) -> logging.Logger:
     """Configure and return a process-wide logger."""
     logger = logging.getLogger(name)
     if logger.handlers:

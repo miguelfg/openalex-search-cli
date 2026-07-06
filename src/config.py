@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
+
 from src.utils import parse_env_value
 
 
@@ -15,7 +16,9 @@ class Config:
 
     def __init__(self, config_path: Optional[str] = None):
         project_root = Path(__file__).resolve().parent.parent
-        self.config_path = Path(config_path).resolve() if config_path else project_root / ".env"
+        self.config_path = (
+            Path(config_path).resolve() if config_path else project_root / ".env"
+        )
         self.config: Dict[str, Any] = {}
         self.load()
 

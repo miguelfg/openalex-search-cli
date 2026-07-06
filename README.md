@@ -6,12 +6,14 @@ Small Click-based CLI for the OpenAlex API.
 
 - OpenAlex site: https://openalex.org
 - OpenAlex documentation: https://developers.openalex.org
+- Cookbook: [COOKBOOK.md](COOKBOOK.md)
 - Skillset repo: https://github.com/miguelfg/api-to-cli-skillset
 
 ## What It Does
 
 - Lists core OpenAlex resources.
 - Fetches single records by ID.
+- Supports common OpenAlex query params: `filter`, `search`, `sort`, `group_by`, pagination, `sample`, `seed`, and `select`.
 - Sends the OpenAlex `api_key` as a query parameter.
 - Supports JSON output and batch entry points.
 
@@ -54,6 +56,8 @@ Notes:
 
 ## Examples
 
+See [COOKBOOK.md](COOKBOOK.md) for recipe-style examples covering authors, institutions, topics, citations, open access, funders, publishers, and autocomplete.
+
 List works:
 
 ```bash
@@ -70,6 +74,29 @@ Get one work:
 
 ```bash
 uv run openalex-search-cli works get W2741809807
+```
+
+Search and sort works:
+
+```bash
+uv run openalex-search-cli works list --search CRISPR --sort -relevance_score --per-page 10
+```
+
+Filter and select fields:
+
+```bash
+uv run openalex-search-cli works list \
+  --filter 'publication_year:2024,open_access.is_oa:true' \
+  --select id,display_name,publication_year \
+  --per-page 10
+```
+
+Group results:
+
+```bash
+uv run openalex-search-cli works list \
+  --filter publication_year:2020-2024 \
+  --group-by publication_year
 ```
 
 List authors:
@@ -116,6 +143,18 @@ uv run openalex-search-cli batch --input-file requests.txt
 - `rate_limit`
 - `text_topics`
 - `batch`
+
+Most resource `list` commands accept:
+
+```text
+--filter --search --sort --group-by --per-page --page --cursor --sample --seed --select
+```
+
+Most resource `get` commands accept:
+
+```text
+--select
+```
 
 ## Validation
 

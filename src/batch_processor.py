@@ -2,10 +2,11 @@
 Batch request processor for CSV/TXT input files.
 """
 
-import json
 import csv
+import json
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 from src.client import APIClient
 from src.config import Config
 from src.output import save_output
@@ -17,10 +18,10 @@ class BatchProcessor:
     def __init__(
         self,
         config: Config,
-        output_format: str = 'json',
-        output_path: str = './output',
+        output_format: str = "json",
+        output_path: str = "./output",
         include_timestamp: bool = False,
-        timestamp_format: str = '%Y%m%d_%H%M%S',
+        timestamp_format: str = "%Y%m%d_%H%M%S",
     ):
         self.config = config
         self.client = APIClient(config)
@@ -34,9 +35,9 @@ class BatchProcessor:
         """Process input file (CSV or TXT)."""
         file_path = Path(file_path)
 
-        if file_path.suffix.lower() == '.csv':
+        if file_path.suffix.lower() == ".csv":
             requests_list = self._parse_csv(file_path)
-        elif file_path.suffix.lower() == '.txt':
+        elif file_path.suffix.lower() == ".txt":
             requests_list = self._parse_txt(file_path)
         else:
             raise ValueError(f"Unsupported file format: {file_path.suffix}")
@@ -77,10 +78,10 @@ class BatchProcessor:
         """Execute a single request."""
         # OpenAlex is a read-only API; batch input is untrusted, so only GET is
         # allowed. The client validates the endpoint (on-host, on-path).
-        method = request_data.get('method', 'GET').upper()
-        if method != 'GET':
+        method = request_data.get("method", "GET").upper()
+        if method != "GET":
             raise ValueError(f"Only GET is allowed in batch mode, got {method}")
-        return self.client.get(request_data.get('endpoint', '/'))
+        return self.client.get(request_data.get("endpoint", "/"))
 
     def _save_results(self, results: List[Dict]):
         """Save results in specified format."""
